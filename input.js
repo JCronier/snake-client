@@ -1,10 +1,14 @@
 // input.js
 
-const { stdin } = require("process");
+const { stdin, stdout } = require("process");
+const prompt = require("prompt-sync")();
 
 let connection;
+let messageFlag = false;
+
 // setup interface to handle user input from stdin
 const setupInput = function (conn) {
+  messageFlag = false;
   connection = conn;
   const stdin = process.stdin;
   stdin.setRawMode(true);
@@ -15,6 +19,9 @@ const setupInput = function (conn) {
 };
 
 const handleUserInput = function(key) {
+  if (messageFlag) {
+    return;
+  }
   if (key === "\u0003") {
     console.log("Thanks for playing");
     process.exit();
@@ -26,6 +33,9 @@ const handleUserInput = function(key) {
     connection.write("Move: down");
   } else if (key === "d") {
     connection.write("Move: right");
+  } else if (key === "m") {
+    const message = prompt("Message: ");
+    connection.write(`Say: ${message}`);
   }
 };
 
