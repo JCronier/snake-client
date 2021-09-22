@@ -1,39 +1,35 @@
 // input.js
 
-const { stdin, stdout } = require("process");
+const { UP_KEY, DOWN_KEY, RIGHT_KEY, EXIT_KEY, MESSAGE_KEY, LEFT_KEY } = require("./constants");
 const prompt = require("prompt-sync")();
 
 let connection;
-let messageFlag = false;
 
 // setup interface to handle user input from stdin
-const setupInput = function (conn) {
-  messageFlag = false;
+const setupInput = function(conn) {
   connection = conn;
   const stdin = process.stdin;
   stdin.setRawMode(true);
   stdin.setEncoding("utf8");
   stdin.resume();
   stdin.on("data", key => handleUserInput(key));
+
   return stdin;
 };
 
 const handleUserInput = function(key) {
-  if (messageFlag) {
-    return;
-  }
-  if (key === "\u0003") {
+  if (key === EXIT_KEY) {
     console.log("Thanks for playing");
     process.exit();
-  } else if (key === "w") {
+  } else if (key === UP_KEY) {
     connection.write("Move: up");
-  } else if (key === "a") {
+  } else if (key === LEFT_KEY) {
     connection.write("Move: left");
-  } else if (key === "s") {
+  } else if (key === DOWN_KEY) {
     connection.write("Move: down");
-  } else if (key === "d") {
+  } else if (key === RIGHT_KEY) {
     connection.write("Move: right");
-  } else if (key === "m") {
+  } else if (key === MESSAGE_KEY) {
     const message = prompt("Message: ");
     connection.write(`Say: ${message}`);
   }
